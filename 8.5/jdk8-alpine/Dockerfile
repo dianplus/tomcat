@@ -91,8 +91,8 @@ RUN set -e \
                 exit 1; \
         fi
 
-COPY server.xml  /usr/local/tomcat/conf/
-COPY context.xml /usr/local/tomcat/conf/
+COPY server.xml          /usr/local/tomcat/conf/
+COPY context.xml.default /usr/local/tomcat/conf/Catalina/localhost/
 
 ENV FC_LANG en-US
 

@@ -10,8 +10,8 @@ RUN apk add --no-cache tzdata ttf-dejavu && \
     apk del --no-cache tzdata && \
     rm -rf /var/cache/apk/*
 
-COPY server.xml  /usr/local/tomcat/conf/
-COPY context.xml /usr/local/tomcat/conf/
+COPY server.xml          /usr/local/tomcat/conf/
+COPY context.xml.default /usr/local/tomcat/conf/Catalina/localhost/
 
 ENV FC_LANG en-US                                                                                                    
 
