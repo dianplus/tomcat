@@ -4,7 +4,7 @@ MAINTAINER Analyser, analyser@gmail.com
 ## Add package
 # 1) modify local timezone
 # 2) ttf-dejavu font package used by verify code generation.
-RUN apk add --no-cache tzdata ttf-dejavu && \
+RUN apk add --no-cache tzdata ttf-dejavu unzip && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone && \
     apk del --no-cache tzdata && \
