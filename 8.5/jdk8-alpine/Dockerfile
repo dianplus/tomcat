@@ -147,10 +147,10 @@ COPY context.xml.default /usr/local/tomcat/conf/Catalina/localhost/
 
 ENV FC_LANG en-US
 
-RUN wget -O /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64
-RUN chmod +x /usr/bin/dumb-init
+#RUN wget -O /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64
+#RUN chmod +x /usr/bin/dumb-init
 
-CMD ["dumb-init","catalina.sh", "run"]
+#CMD ["dumb-init","catalina.sh", "run"]
 
 RUN rm -rf /usr/local/tomcat/webapps/*
 
