@@ -144,10 +144,10 @@ RUN apk add --no-cache tzdata ttf-dejavu unzip && \
 
 COPY server.xml          /usr/local/tomcat/conf/
 COPY context.xml.default /usr/local/tomcat/conf/Catalina/localhost/
-COPY dumb-init /usr/bin/
 
 ENV FC_LANG en-US
 
+RUN wget -O /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64
 RUN chmod +x /usr/bin/dumb-init
 
 CMD ["dumb-init","catalina.sh", "run"]
