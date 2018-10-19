@@ -146,9 +146,11 @@ COPY server.xml          /usr/local/tomcat/conf/
 COPY context.xml.default /usr/local/tomcat/conf/Catalina/localhost/
 COPY dumb-init /usr/bin/
 
-ENV FC_LANG en-US                                                                                                    
+ENV FC_LANG en-US
+
+RUN chmod +x /usr/bin/dumb-init
 
 CMD ["dumb-init","catalina.sh", "run"]
 
 RUN rm -rf /usr/local/tomcat/webapps/*
-RUN chmod +x /usr/bin/dumb-init
+
