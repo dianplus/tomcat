@@ -148,7 +148,7 @@ COPY dumb-init /usr/bin/
 
 ENV FC_LANG en-US                                                                                                    
 
-CMD ["catalina.sh", "run"]
+CMD ["dumb-init","catalina.sh", "run"]
 
 RUN rm -rf /usr/local/tomcat/webapps/*
 RUN chmod +x /usr/bin/dumb-init
