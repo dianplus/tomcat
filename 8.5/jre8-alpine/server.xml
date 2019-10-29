@@ -36,6 +36,9 @@
 				<Valve className="org.apache.catalina.valves.RemoteIpValve"
 					remoteIpHeader="X-Forwarded-For"
 					protocolHeader="X-Forwarded-Proto" />
+				<Valve className="org.apache.catalina.valves.AccessLogValve"
+					directory="logs" prefix="access" suffix=".log"
+					pattern="combined" />
 			</Host>
 		</Engine>
 	</Service>
