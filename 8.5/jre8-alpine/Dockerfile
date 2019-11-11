@@ -2,7 +2,7 @@ FROM tomcat:8.5-alpine
 MAINTAINER Analyser, analyser@gmail.com
 
 ## Add package
-# 1) modify local timezone
+# 1) modify local timezone, for compatible only. Instead of -Duser.timezone=GMT+08 
 # 2) ttf-dejavu font package used by verify code generation.
 RUN apk add --no-cache tzdata ttf-dejavu unzip && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
