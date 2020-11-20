@@ -18,7 +18,8 @@
                    compression="on" compressionMinSize="50"
                    noCompressionUserAgents="gozilla, traviata"
                    compressibleMimeType="text/html,text/xml,text/javascript,text/css,text/plain"
-                   maxThreads="1024" processorCache="1024" />
+                   maxThreads="1024" processorCache="1024" 
+                   maxHttpHeaderSize="65536" />
         <Engine name="Catalina" defaultHost="localhost">
             <Realm className="org.apache.catalina.realm.LockOutRealm">
                 <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
