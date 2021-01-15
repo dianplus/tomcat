@@ -17,8 +17,9 @@
                    connectionTimeout="20000" URIEncoding="UTF-8" redirectPort="8443"
                    compression="on" compressionMinSize="50"
                    noCompressionUserAgents="gozilla, traviata"
-                   compressableMimeType="text/html,text/xml,text/javascript,text/css,text/plain"
-                   maxThreads="1024" processorCache="1024" />
+                   compressibleMimeType="text/html,text/xml,text/javascript,text/css,text/plain"
+                   maxThreads="1024" processorCache="1024" 
+                   maxHttpHeaderSize="65536" />
         <Engine name="Catalina" defaultHost="localhost">
             <Realm className="org.apache.catalina.realm.LockOutRealm">
                 <Realm className="org.apache.catalina.realm.UserDatabaseRealm"

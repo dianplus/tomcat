@@ -1,4 +1,4 @@
-FROM tomcat:9-jdk8-adoptopenjdk-hotspot
+FROM tomcat:8-jdk8
 MAINTAINER Analyser, analyser@gmail.com
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -8,12 +8,9 @@ COPY sources.list        /etc/apt/sources.list
 COPY server.xml          /usr/local/tomcat/conf/
 COPY context.xml.default /usr/local/tomcat/conf/Catalina/localhost/
 
-### for jdk11-adoptopenjdk serials & Aliyun Repository
-# RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        telnet tzdata unzip; \
+        telnet tzdata unzip dumb-init; \
     rm -rf /var/lib/apt/lists/*; \
     rm -rf /usr/local/tomcat/webapps.dist
 
