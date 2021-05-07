@@ -1,4 +1,4 @@
-FROM tomcat:9-jdk16
+FROM tomcat:10-jdk16
 MAINTAINER Analyser, analyser@gmail.com
 
 ARG DEBIAN_FRONTEND=noninteractive
