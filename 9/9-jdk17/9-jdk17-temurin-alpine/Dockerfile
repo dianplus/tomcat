@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:18-jdk-alpine
 MAINTAINER Analyser, analyser@gmail.com
 
 ENV CATALINA_HOME /usr/local/tomcat
