@@ -1,4 +1,4 @@
-FROM arm64v8/tomcat:9-jdk17-temurin-jammy
+FROM arm64v8/tomcat:10-jdk17-temurin-jammy
 MAINTAINER Analyser, analyser@gmail.com
 
 ARG DEBIAN_FRONTEND=noninteractive
