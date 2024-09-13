@@ -28,7 +28,9 @@ ENV JDK_JAVA_OPTIONS="\
 --add-opens=java.base/java.math=ALL-UNNAMED \
 --add-opens=java.base/java.nio=ALL-UNNAMED \
 --add-opens=java.base/java.text=ALL-UNNAMED \
+--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED \
 --add-opens=java.desktop/java.awt.font=ALL-UNNAMED \
 --add-opens=java.naming/com.sun.jndi.ldap=ALL-UNNAMED \
 --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED \
---add-exports=java.base/sun.net.www=ALL-UNNAMED"
+--add-exports=java.base/sun.net.www=ALL-UNNAMED \
+--add-exports=java.base/sun.util.calendar=ALL-UNNAMED"
