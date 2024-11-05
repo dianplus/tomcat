@@ -4,7 +4,7 @@ MAINTAINER Analyser, analyser@gmail.com
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TZ=Asia/Shanghai
 
-COPY sources.list        /etc/apt/sources.list
+# COPY sources.list        /etc/apt/sources.list
 COPY server.xml          /usr/local/tomcat/conf/
 COPY context.xml.default /usr/local/tomcat/conf/Catalina/localhost/
 

@@ -1,4 +1,4 @@
-FROM tomcat:9-jre17-temurin-jammy
+FROM tomcat:9-jdk17-temurin-jammy
 MAINTAINER Analyser, analyser@gmail.com
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -10,13 +10,24 @@ COPY context.xml.default /usr/local/tomcat/conf/Catalina/localhost/
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        telnet tzdata unzip dumb-init; \
-    rm -rf /var/lib/apt/lists/*; \
-    rm -rf /usr/local/tomcat/webapps.dist
+       telnet tzdata unzip dumb-init libjemalloc2 \
+    && ln -s /usr/lib/`(uname -m)`-linux-gnu /usr/lib/linux-gnu \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /usr/local/tomcat/webapps.dist
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone \
     && dpkg-reconfigure --frontend noninteractive tzdata
+
+ENV LD_PRELOAD=/usr/lib/linux-gnu/libjemalloc.so.2
+
+# MALLOC_CONF: Set jemalloc configuration options
+# prof_leak: Enable leak profiling
+# prof: Enable heap profiling
+# lg_prof_interval: Set the interval between heap profiling samples
+# lg_prof_sample: Set the number of bytes to allocate between heap profiling samples
+# prof_prefix: Set the prefix for heap profiling output files
+ENV MALLOC_CONF="prof_leak:true,prof:true,lg_prof_interval:25,lg_prof_sample:18,prof_prefix:/tmp/jeprof"
 
 ENV JDK_JAVA_OPTIONS="\
 --add-opens=java.base/java.lang=ALL-UNNAMED \
@@ -34,3 +45,4 @@ ENV JDK_JAVA_OPTIONS="\
 --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED \
 --add-exports=java.base/sun.net.www=ALL-UNNAMED \
 --add-exports=java.base/sun.util.calendar=ALL-UNNAMED"
+
