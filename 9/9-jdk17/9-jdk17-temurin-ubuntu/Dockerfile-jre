@@ -34,3 +34,7 @@ ENV JDK_JAVA_OPTIONS="\
 --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED \
 --add-exports=java.base/sun.net.www=ALL-UNNAMED \
 --add-exports=java.base/sun.util.calendar=ALL-UNNAMED"
+
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+CMD ["catalina.sh", "run"]
