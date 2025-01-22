@@ -20,6 +20,7 @@
                    compressibleMimeType="text/html,text/xml,text/javascript,text/css,text/plain"
                    maxThreads="1024" processorCache="1024" 
                    maxHttpHeaderSize="65536"
+                   maxPostSize="104857600"
                    rejectIllegalHeader="false"
                    relaxedPathChars="&#x5B;&#x5D;&#x7C;"
                    relaxedQueryChars="&#x5B;&#x5D;&#x7C;&#x7B;&#x7D;&#x5E;&#x5C;&#x60;&#x22;&#x3C;&#x3E;" />
