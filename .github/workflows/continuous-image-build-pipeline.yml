@@ -21,7 +21,7 @@ jobs:
             image_tags: "${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jre17-jemalloc,${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-jemalloc,${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-ubuntu-jemalloc"
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
