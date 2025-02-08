@@ -27,16 +27,16 @@ podman login \
   registry.domain.name
 
 podman manifest create \
-  registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble
+  registry.domain.name/reponame/tomcat:9-jdk17
 
 podman build \
   --platform linux/amd64,linux/arm64 \
-  --manifest registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble \
+  --manifest registry.domain.name/reponame/tomcat:9-jdk17 \
   --file Dockerfile \
   .
 
 podman manifest push \
-  --all registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble
+  --all registry.domain.name/reponame/tomcat:9-jdk17
 ```
 
 ### 1.2. for Docker
@@ -80,7 +80,7 @@ docker build \
   --build-arg HTTP_PROXY=http://192.168.199.21:1087 \
   --build-arg HTTPS_PROXY=http://192.168.199.21:1087 \
   --build-arg NO_PROXY=192.168.*,10.*,172.*,your.domain.name \
-  --tag registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble \
+  --tag registry.domain.name/reponame/tomcat:9-jdk17 \
   --file Dockerfile \
   .
 ```
@@ -92,32 +92,32 @@ docker build \
 ```bash
 # AMD64
 docker build \
-  --tag registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble-amd64 \
+  --tag registry.domain.name/reponame/tomcat:9-jdk17-amd64 \
   --build-arg ARCH=amd64/ \
   .
-docker push registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble-amd64
+docker push registry.domain.name/reponame/tomcat:9-jdk17-amd64
 
 # ARM64
 docker build \
-  --tag registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble-arm64 \
+  --tag registry.domain.name/reponame/tomcat:9-jdk17-arm64 \
   --build-arg ARCH=arm64/ \
   .
-docker push registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble-arm64
+docker push registry.domain.name/reponame/tomcat:9-jdk17-arm64
 ```
 
 ##### 1.2.2.2. Create manifest list and add manifest
 
 ```bash
 docker manifest create \
-  registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble \
-  --amend registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble-amd64 \
-  --amend registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble-arm64
+  registry.domain.name/reponame/tomcat:9-jdk17 \
+  --amend registry.domain.name/reponame/tomcat:9-jdk17-amd64 \
+  --amend registry.domain.name/reponame/tomcat:9-jdk17-arm64
 ```
 
 ##### 1.2.2.3. Push manifest
 
 ```bash
-docker manifest push registry.domain.name/reponame/tomcat:9-jdk17-temurin-noble
+docker manifest push registry.domain.name/reponame/tomcat:9-jdk17
 ```
 
 ## 2. Kubernetes Deployment Example - For graceful shutdown
