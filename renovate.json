@@ -13,6 +13,17 @@
       ],
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^9/9-jdk17/Dockerfile-renovate$"
+      ],
+      "matchStrings": [
+        "^FROM\\s+(?<depName>eclipse-temurin):(?<currentValue>17\\.[0-9]+\\.[0-9]+_[0-9]+-jre)"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
     }
   ],
   "ignorePaths": [

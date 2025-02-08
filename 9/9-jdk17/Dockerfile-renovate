@@ -1,2 +1,5 @@
-FROM tomcat:9.0.98-jdk17
+FROM tomcat:9.0.98-jdk17 AS tomcat
+LABEL maintainer="Analyser, analyser@gmail.com"
+
+FROM eclipse-temurin:17.0.14_7-jre AS jre
 LABEL maintainer="Analyser, analyser@gmail.com"
