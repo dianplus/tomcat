@@ -34,7 +34,7 @@ jobs:
           password: ${{ secrets.ALIBABA_CLOUD_CR_PASSWORD }}
 
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           file: ${{ matrix.dockerfile }}
           platforms: linux/amd64,linux/arm64
