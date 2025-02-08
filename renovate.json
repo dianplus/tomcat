@@ -5,7 +5,7 @@
   "regexManagers": [
     {
       "fileMatch": ["^9/9-jdk17/Dockerfile-renovate$"],
-      "matchStrings": ["^FROM\\s+tomcat:(?<currentValue>9\\.[0-9]+\\.[0-9]+)-jdk17"],
+      "matchStrings": ["^FROM\\s+(?<depName>tomcat):(?<currentValue>9\\.[0-9]+\\.[0-9]+)-jdk17"],
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker"
     }
