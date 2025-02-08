@@ -1,11 +1,16 @@
 {
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": ["^9/9-jdk17/Dockerfile-renovate$"],
-      "matchStrings": ["^FROM\\s+(?<depName>tomcat):(?<currentValue>9\\.[0-9]+\\.[0-9]+)-jdk17"],
+      "customType": "regex",
+      "fileMatch": [
+        "^9/9-jdk17/Dockerfile-renovate$"
+      ],
+      "matchStrings": [
+        "^FROM\\s+(?<depName>tomcat):(?<currentValue>9\\.[0-9]+\\.[0-9]+)-jdk17"
+      ],
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker"
     }
