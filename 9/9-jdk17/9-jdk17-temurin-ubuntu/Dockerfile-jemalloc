@@ -1,4 +1,4 @@
-FROM tomcat:9-jdk17
+FROM tomcat:11-jdk17
 LABEL maintainer="Analyser, analyser@gmail.com"
 
 ARG DEBIAN_FRONTEND=noninteractive
