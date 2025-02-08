@@ -1,0 +1,42 @@
+name: Container Image Build Pipeline
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile"
+            image_tags: "${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jdk17,${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin,${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin-ubuntu"
+          - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile-jre"
+            image_tags: "${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jre17,${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin,${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-ubuntu"
+          - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile-jemalloc"
+            image_tags: "${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jdk17-jemalloc,${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin-jemalloc,${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin-ubuntu-jemalloc"
+          - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile-jre-jemalloc"
+            image_tags: "${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jre17-jemalloc,${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-jemalloc,${{ vars.PRIVATE_REGISTRY_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-ubuntu-jemalloc"
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Private Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ vars.PRIVATE_REGISTRY_HOSTNAME }}
+          username: ${{ secrets.ALIBABA_CLOUD_CR_USERNAME }}
+          password: ${{ secrets.ALIBABA_CLOUD_CR_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ matrix.image_tags }}
