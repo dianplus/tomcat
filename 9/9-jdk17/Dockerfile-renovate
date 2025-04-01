@@ -1,2 +1,2 @@
-FROM tomcat:9.0.98-jdk17
+FROM tomcat:9.0.98
 LABEL maintainer="Analyser, analyser@gmail.com"
