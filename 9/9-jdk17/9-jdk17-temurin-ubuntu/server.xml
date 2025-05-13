@@ -6,7 +6,7 @@
     <Service name="Catalina">
         <Connector
             port="8080" protocol="org.apache.coyote.http11.Http11Nio2Protocol"
-            connectionTimeout="20000" URIEncoding="UTF-8" redirectPort="8443"
+            connectionTimeout="20000" URIEncoding="UTF-8"
             compression="on" compressionMinSize="1024"
             compressibleMimeType="text/html,text/xml,text/javascript,text/css,text/plain,application/json"
             maxThreads="1024" minSpareThreads="128" acceptCount="384" processorCache="1024" maxConnections="10000"
