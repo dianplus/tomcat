@@ -18,12 +18,6 @@ jobs:
           - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile-jre"
             image_tags: "${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-ubuntu"
             platforms: "linux/amd64,linux/arm64"
-          - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile-jemalloc"
-            image_tags: "${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-jemalloc,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin-jemalloc,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin-ubuntu-jemalloc"
-            platforms: "linux/amd64"
-          - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile-jre-jemalloc"
-            image_tags: "${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-jemalloc,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-jemalloc,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-ubuntu-jemalloc"
-            platforms: "linux/amd64"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
