@@ -7,9 +7,13 @@ ARG TZ=Asia/Shanghai
 COPY server.xml          /usr/local/tomcat/conf/
 COPY context.xml.default /usr/local/tomcat/conf/Catalina/localhost/
 
+RUN mkdir -p /opt/scripts
+COPY scripts/*.sh /opt/scripts/
+RUN chmod +x /opt/scripts/*.sh
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        telnet tzdata unzip dumb-init && \
+        telnet tzdata unzip dumb-init net-tools iproute2 && \
     rm -rf /var/lib/apt/lists/* /usr/local/tomcat/webapps.dist
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \

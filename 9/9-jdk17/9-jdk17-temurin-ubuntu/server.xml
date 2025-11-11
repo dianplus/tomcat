@@ -5,16 +5,34 @@
     <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
     <Service name="Catalina">
         <Connector
-            port="8080" protocol="org.apache.coyote.http11.Http11Nio2Protocol"
-            connectionTimeout="20000" URIEncoding="UTF-8"
-            compression="on" compressionMinSize="1024"
+            port="8080"
+            protocol="org.apache.coyote.http11.Http11Nio2Protocol"
+            connectionTimeout="12000"
+            maxConnections="8000"
+            maxThreads="4096"
+            minSpareThreads="80"
+            maxSpareThreads="400"
+            acceptCount="800"
+            processorCache="2000"
+            acceptorThreadCount="2"
+            pollerThreadCount="6"
+            selectorTimeout="1000"
+            maxKeepAliveRequests="150"
+            keepAliveTimeout="15000"
+            socket.soReuseAddress="true"
+            socket.soKeepAlive="true"
+            socket.tcpNoDelay="true"
+            socket.soLingerOn="false"
+            socket.soTimeout="12000"
+            URIEncoding="UTF-8"
+            relaxedPathChars="&#x5B;&#x5D;&#x7C;"
+            relaxedQueryChars="&#x5B;&#x5D;&#x7C;&#x7B;&#x7D;&#x5E;&#x5C;&#x60;&#x22;&#x3C;&#x3E;"
+            compression="on"
+            compressionMinSize="1024"
             compressibleMimeType="text/html,text/xml,text/javascript,text/css,text/plain,application/json"
-            maxThreads="1024" minSpareThreads="128" acceptCount="384" processorCache="1024" maxConnections="10000"
             maxHttpHeaderSize="65536"
             maxPostSize="104857600"
-            rejectIllegalHeader="false"
-            relaxedPathChars="&#x5B;&#x5D;&#x7C;"
-            relaxedQueryChars="&#x5B;&#x5D;&#x7C;&#x7B;&#x7D;&#x5E;&#x5C;&#x60;&#x22;&#x3C;&#x3E;" />
+            rejectIllegalHeader="false" />
         <Engine name="Catalina" defaultHost="localhost">
             <Host
                 name="localhost" appBase="webapps"
