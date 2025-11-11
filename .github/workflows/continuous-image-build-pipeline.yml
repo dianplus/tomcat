@@ -13,9 +13,11 @@ jobs:
       matrix:
         include:
           - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile"
+            base_image: "tomcat:9-jdk17"
             image_tags: "${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin-ubuntu"
             platforms: "linux/amd64,linux/arm64"
-          - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile-jre"
+          - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile"
+            base_image: "tomcat:9-jre17"
             image_tags: "${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-ubuntu"
             platforms: "linux/amd64,linux/arm64"
     steps:
@@ -41,6 +43,8 @@ jobs:
         with:
           context: ./9/9-jdk17/9-jdk17-temurin-ubuntu
           file: ${{ matrix.dockerfile }}
+          build-args: |
+            BASE_IMAGE=${{ matrix.base_image }}
           platforms: ${{ matrix.platforms }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ matrix.image_tags }}

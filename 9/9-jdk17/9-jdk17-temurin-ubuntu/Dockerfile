@@ -1,4 +1,5 @@
-FROM tomcat:9-jdk17
+ARG BASE_IMAGE=tomcat:9-jdk17
+FROM ${BASE_IMAGE}
 LABEL maintainer="Analyser, analyser@gmail.com"
 
 ARG DEBIAN_FRONTEND=noninteractive
