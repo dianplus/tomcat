@@ -22,7 +22,7 @@ jobs:
             platforms: "linux/amd64,linux/arm64"
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Log in to Private Registry
         if: github.event_name != 'pull_request'
