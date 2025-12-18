@@ -39,9 +39,6 @@
                 unpackWARs="false" autoDeploy="false">
                 <Valve className="org.apache.catalina.valves.RemoteIpValve"
                     remoteIpHeader="X-Forwarded-For" protocolHeader="X-Forwarded-Proto" />
-                <Valve className="org.apache.catalina.valves.AccessLogValve"
-                    directory="logs" prefix="access" suffix=".log" pattern="combined"
-                    maxDays="1" />
                 <Context path="" docBase="ROOT" reloadable="false" />
             </Host>
         </Engine>
