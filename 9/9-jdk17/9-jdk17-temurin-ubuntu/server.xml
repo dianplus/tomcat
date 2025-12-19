@@ -17,8 +17,8 @@
             acceptorThreadCount="2"
             pollerThreadCount="6"
             selectorTimeout="1000"
-            maxKeepAliveRequests="150"
-            keepAliveTimeout="15000"
+            maxKeepAliveRequests="200"
+            keepAliveTimeout="20000"
             socket.soReuseAddress="true"
             socket.soKeepAlive="true"
             socket.tcpNoDelay="true"
@@ -38,7 +38,12 @@
                 name="localhost" appBase="webapps"
                 unpackWARs="false" autoDeploy="false">
                 <Valve className="org.apache.catalina.valves.RemoteIpValve"
-                    remoteIpHeader="X-Forwarded-For" protocolHeader="X-Forwarded-Proto" />
+                    remoteIpHeader="X-Forwarded-For"
+                    protocolHeader="X-Forwarded-Proto"
+                    protocolHeaderHttpsValue="https"
+                    portHeader="X-Forwarded-Port"
+                    internalProxies="10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|192\.168\.\d+\.\d+"
+                    trustedProxies="10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|192\.168\.\d+\.\d+" />
                 <Context path="" docBase="ROOT" reloadable="false" />
             </Host>
         </Engine>
