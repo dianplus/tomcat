@@ -11,15 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        java_version: [17, 21]
+        type: [jdk, jre]
         include:
-          - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile"
-            base_image: "tomcat:9-jdk17"
-            image_tags: "${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin-ubuntu"
-            platforms: "linux/amd64,linux/arm64"
-          - dockerfile: "9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile"
-            base_image: "tomcat:9-jre17"
-            image_tags: "${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-ubuntu"
-            platforms: "linux/amd64,linux/arm64"
+          - java_version: 17
+            type: jdk
+            extra_tags: ",${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin-ubuntu"
+          - java_version: 17
+            type: jre
+            extra_tags: ",${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-ubuntu"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
@@ -41,10 +41,10 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
-          context: ./9/9-jdk17/9-jdk17-temurin-ubuntu
-          file: ${{ matrix.dockerfile }}
+          context: ./9
+          file: 9/9-jdk${{ matrix.java_version }}/9-jdk${{ matrix.java_version }}-temurin-ubuntu/Dockerfile
           build-args: |
-            BASE_IMAGE=${{ matrix.base_image }}
-          platforms: ${{ matrix.platforms }}
+            BASE_IMAGE=tomcat:9-${{ matrix.type }}${{ matrix.java_version }}
+          platforms: "linux/amd64,linux/arm64"
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ matrix.image_tags }}
+          tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-${{ matrix.type }}${{ matrix.java_version }}${{ matrix.extra_tags || '' }}

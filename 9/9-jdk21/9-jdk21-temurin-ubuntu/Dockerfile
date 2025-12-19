@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=tomcat:9-jdk17
+ARG BASE_IMAGE=tomcat:9-jdk21
 FROM ${BASE_IMAGE}
 LABEL maintainer="Analyser, analyser@gmail.com"
 
