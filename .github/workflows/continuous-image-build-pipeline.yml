@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java_version: [17, 21]
+        java_version: [17, 21, 25]
         type: [jdk, jre]
         include:
           - java_version: 17
@@ -20,6 +20,12 @@ jobs:
           - java_version: 17
             type: jre
             extra_tags: ",${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-ubuntu"
+          - java_version: 25
+            type: jdk
+            extra_tags: ",${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk25-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk25-temurin-ubuntu"
+          - java_version: 25
+            type: jre
+            extra_tags: ",${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre25-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre25-temurin-ubuntu"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
