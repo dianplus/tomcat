@@ -34,9 +34,6 @@ ENV JDK_JAVA_OPTIONS="\
     --add-exports=java.base/sun.net.www=ALL-UNNAMED \
     --add-exports=java.base/sun.util.calendar=ALL-UNNAMED"
 
-RUN grep -qF "org.apache.jasper.servlet.TldScanner.level" /usr/local/tomcat/conf/logging.properties || \
-    echo "org.apache.jasper.servlet.TldScanner.level = FINE" >> /usr/local/tomcat/conf/logging.properties
-
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 CMD ["catalina.sh", "run"]
