@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Server port="8005" shutdown="SHUTDOWN">
+    <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+    <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+    <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+    <Service name="Catalina">
+        <Connector
+            port="8080"
+            protocol="org.apache.coyote.http11.Http11Nio2Protocol"
+            connectionTimeout="12000"
+            maxConnections="8000"
+            maxThreads="4096"
+            minSpareThreads="80"
+            acceptCount="800"
+            processorCache="2000"
+            acceptorThreadCount="2"
+            maxKeepAliveRequests="200"
+            keepAliveTimeout="20000"
+            socket.soReuseAddress="true"
+            socket.soKeepAlive="true"
+            socket.tcpNoDelay="true"
+            socket.soLingerOn="false"
+            socket.soTimeout="12000"
+            URIEncoding="UTF-8"
+            relaxedPathChars="&#x5B;&#x5D;&#x7C;"
+            relaxedQueryChars="&#x5B;&#x5D;&#x7C;&#x7B;&#x7D;&#x5E;&#x5C;&#x60;&#x22;&#x3C;&#x3E;"
+            compression="on"
+            compressionMinSize="1024"
+            compressibleMimeType="text/html,text/xml,text/javascript,text/css,text/plain,application/json"
+            maxHttpHeaderSize="65536"
+            maxPostSize="104857600"
+            rejectIllegalHeader="false" />
+        <Engine name="Catalina" defaultHost="localhost">
+            <Host
+                name="localhost" appBase="webapps"
+                unpackWARs="false" autoDeploy="false">
+                <Valve className="org.apache.catalina.valves.RemoteIpValve"
+                    remoteIpHeader="X-Forwarded-For"
+                    protocolHeader="X-Forwarded-Proto"
+                    protocolHeaderHttpsValue="https"
+                    portHeader="X-Forwarded-Port"
+                    internalProxies="10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|192\.168\.\d+\.\d+"
+                    trustedProxies="10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|192\.168\.\d+\.\d+" />
+                <Context path="" docBase="ROOT" reloadable="false" />
+            </Host>
+        </Engine>
+    </Service>
+</Server>

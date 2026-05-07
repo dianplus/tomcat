@@ -8,24 +8,47 @@ on:
 
 jobs:
   build:
+    name: Build ${{ matrix.name }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        java_version: [17, 21, 25]
-        type: [jdk, jre]
         include:
-          - java_version: 17
-            type: jdk
-            extra_tags: ",${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin-ubuntu"
-          - java_version: 17
-            type: jre
-            extra_tags: ",${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-ubuntu"
-          - java_version: 25
-            type: jdk
-            extra_tags: ",${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk25-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk25-temurin-ubuntu"
-          - java_version: 25
-            type: jre
-            extra_tags: ",${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre25-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre25-temurin-ubuntu"
+          - name: tomcat9-jdk17
+            context: ./9
+            file: 9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile
+            base_image: tomcat:9-jdk17
+            tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk17-temurin-ubuntu
+          - name: tomcat9-jre17
+            context: ./9
+            file: 9/9-jdk17/9-jdk17-temurin-ubuntu/Dockerfile
+            base_image: tomcat:9-jre17
+            tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre17-temurin-ubuntu
+          - name: tomcat9-jdk21
+            context: ./9
+            file: 9/9-jdk21/9-jdk21-temurin-ubuntu/Dockerfile
+            base_image: tomcat:9-jdk21
+            tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk21
+          - name: tomcat9-jre21
+            context: ./9
+            file: 9/9-jdk21/9-jdk21-temurin-ubuntu/Dockerfile
+            base_image: tomcat:9-jre21
+            tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre21
+          - name: tomcat9-jdk25
+            context: ./9
+            file: 9/9-jdk25/9-jdk25-temurin-ubuntu/Dockerfile
+            base_image: tomcat:9-jdk25
+            tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jdk25
+          - name: tomcat9-jre25
+            context: ./9
+            file: 9/9-jdk25/9-jdk25-temurin-ubuntu/Dockerfile
+            base_image: tomcat:9-jre25
+            tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-jre25
+          - name: tomcat10-jdk21
+            context: ./10
+            file: 10/10-jdk21/10-jdk21-temurin-ubuntu/Dockerfile
+            base_image: tomcat:10-jdk21
+            tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:10-jdk21,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:10-jdk21-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:10-jdk21-temurin-ubuntu
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
@@ -47,10 +70,10 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v7
         with:
-          context: ./9
-          file: 9/9-jdk${{ matrix.java_version }}/9-jdk${{ matrix.java_version }}-temurin-ubuntu/Dockerfile
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
           build-args: |
-            BASE_IMAGE=tomcat:9-${{ matrix.type }}${{ matrix.java_version }}
+            BASE_IMAGE=${{ matrix.base_image }}
           platforms: "linux/amd64,linux/arm64"
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:9-${{ matrix.type }}${{ matrix.java_version }}${{ matrix.extra_tags || '' }}
+          tags: ${{ matrix.tags }}
