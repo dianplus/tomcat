@@ -1,2 +1,2 @@
-FROM tomcat:10.1.54
+FROM tomcat:10.1.55
 LABEL maintainer="Analyser, analyser@gmail.com"
