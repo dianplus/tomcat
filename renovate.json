@@ -5,8 +5,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "^9/Dockerfile\\.renovate$"
+      "managerFilePatterns": [
+        "/^9/Dockerfile\\.renovate$/"
       ],
       "matchStrings": [
         "^FROM\\s+(?<depName>tomcat):(?<currentValue>9\\.[0-9]+\\.[0-9]+)\\s*$"
@@ -16,8 +16,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^10/Dockerfile\\.renovate$"
+      "managerFilePatterns": [
+        "/^10/Dockerfile\\.renovate$/"
       ],
       "matchStrings": [
         "^FROM\\s+(?<depName>tomcat):(?<currentValue>10\\.[0-9]+\\.[0-9]+)\\s*$"
@@ -27,8 +27,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^11/Dockerfile\\.renovate$"
+      "managerFilePatterns": [
+        "/^11/Dockerfile\\.renovate$/"
       ],
       "matchStrings": [
         "^FROM\\s+(?<depName>tomcat):(?<currentValue>11\\.[0-9]+\\.[0-9]+)\\s*$"
