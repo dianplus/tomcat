@@ -61,7 +61,7 @@ jobs:
             tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:11-jre25,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:11-jre25-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:11-jre25-temurin-ubuntu
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Log in to Private Registry
         if: github.event_name != 'pull_request'
