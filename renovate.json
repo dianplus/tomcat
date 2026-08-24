@@ -24,6 +24,17 @@
       ],
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^11/Dockerfile\\.renovate$"
+      ],
+      "matchStrings": [
+        "^FROM\\s+(?<depName>tomcat):(?<currentValue>11\\.[0-9]+\\.[0-9]+)\\s*$"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
     }
   ],
   "packageRules": [
@@ -50,12 +61,26 @@
         "10/Dockerfile.renovate"
       ],
       "allowedVersions": "/^10\\./"
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "tomcat"
+      ],
+      "matchFileNames": [
+        "11/Dockerfile.renovate"
+      ],
+      "allowedVersions": "/^11\\./"
     }
   ],
   "ignorePaths": [
     "9/**/Dockerfile-*",
     "9/**/Dockerfile",
     "10/**/Dockerfile-*",
-    "10/**/Dockerfile"
+    "10/**/Dockerfile",
+    "11/**/Dockerfile-*",
+    "11/**/Dockerfile"
   ]
 }

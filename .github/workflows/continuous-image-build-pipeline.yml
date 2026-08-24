@@ -49,6 +49,16 @@ jobs:
             file: 10/10-jdk21/10-jdk21-temurin-ubuntu/Dockerfile
             base_image: tomcat:10-jdk21
             tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:10-jdk21,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:10-jdk21-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:10-jdk21-temurin-ubuntu
+          - name: tomcat11-jdk25
+            context: ./11
+            file: 11/11-jdk25/11-jdk25-temurin-ubuntu/Dockerfile
+            base_image: tomcat:11-jdk25
+            tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:11-jdk25,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:11-jdk25-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:11-jdk25-temurin-ubuntu
+          - name: tomcat11-jre25
+            context: ./11
+            file: 11/11-jdk25/11-jdk25-temurin-ubuntu/Dockerfile
+            base_image: tomcat:11-jre25
+            tags: ${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:11-jre25,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:11-jre25-temurin,${{ vars.ALIBABA_CLOUD_CR_HOSTNAME }}/dianplus/tomcat:11-jre25-temurin-ubuntu
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
