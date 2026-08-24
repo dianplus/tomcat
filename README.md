@@ -1,181 +1,90 @@
-# Tomcat Container Base Image Guideline
+# dianplus/tomcat — Custom Tomcat Base Images
 
-<!-- MarkdownTOC -->
+Multi-arch custom Tomcat base images built on the official `tomcat` images, hardened with a tuned server configuration and operational tooling. Images are built by GitHub Actions and published to Alibaba Cloud Container Registry (ACR).
 
-- [Tomcat Container Base Image Guideline](#tomcat-container-base-image-guideline)
-  - [1. Cross platform container image building](#1-cross-platform-container-image-building)
-    - [1.1. for Podman](#11-for-podman)
-    - [1.2. for Docker](#12-for-docker)
-      - [1.2.0. Cross platform building](#120-cross-platform-building)
-      - [1.2.1. Method 1 - Use buildx builder](#121-method-1---use-buildx-builder)
-        - [1.2.1.1. Prepare buildx builder](#1211-prepare-buildx-builder)
-        - [1.2.1.2. Build and push](#1212-build-and-push)
-      - [1.2.2. Method 2 - The hard way](#122-method-2---the-hard-way)
-        - [1.2.2.1. Build dedicated platform image](#1221-build-dedicated-platform-image)
-        - [1.2.2.2. Create manifest list and add manifest](#1222-create-manifest-list-and-add-manifest)
-        - [1.2.2.3. Push manifest](#1223-push-manifest)
+- Registry: `registry.cn-hangzhou.aliyuncs.com/dianplus/tomcat`
+- Platforms: `linux/amd64`, `linux/arm64`
+- Lines: Tomcat 9 / 10 / 11
 
-<!-- /MarkdownTOC -->
+## Image Variants
 
-## 1. Cross platform container image building
+| Line | Base image | Published tags |
+| --- | --- | --- |
+| 9 / JDK 17 | `tomcat:9-jdk17` | `9-jdk17`, `9-jdk17-temurin`, `9-jdk17-temurin-ubuntu` |
+| 9 / JRE 17 | `tomcat:9-jre17` | `9-jre17`, `9-jre17-temurin`, `9-jre17-temurin-ubuntu` |
+| 9 / JDK 21 | `tomcat:9-jdk21` | `9-jdk21` |
+| 9 / JRE 21 | `tomcat:9-jre21` | `9-jre21` |
+| 9 / JDK 25 | `tomcat:9-jdk25` | `9-jdk25` |
+| 9 / JRE 25 | `tomcat:9-jre25` | `9-jre25` |
+| 10 / JDK 21 | `tomcat:10-jdk21` | `10-jdk21`, `10-jdk21-temurin`, `10-jdk21-temurin-ubuntu` |
+| 11 / JDK 25 | `tomcat:11-jdk25` | `11-jdk25`, `11-jdk25-temurin`, `11-jdk25-temurin-ubuntu` |
 
-### 1.1. for Podman
+All variants within a line share the same directory and `<line>/common` configuration; each variant Dockerfile is parameterized by `BASE_IMAGE`.
 
-```bash
-podman login \
-  --username=username@your.domain.name \
-  registry.domain.name
+## What Is Customized
 
-# Build JDK version (default)
-podman manifest create \
-  registry.domain.name/reponame/tomcat:9-jdk17
+Layered on top of the official image:
 
-podman build \
-  --platform linux/amd64,linux/arm64 \
-  --manifest registry.domain.name/reponame/tomcat:9-jdk17 \
-  --build-arg BASE_IMAGE=tomcat:9-jdk17 \
-  --file Dockerfile \
-  .
+- `common/server.xml` — tuned NIO2 connector (`maxThreads=4096`, `maxConnections=8000`, `acceptCount=800`, HTTP compression, relaxed query/path chars, `RemoteIpValve` for `X-Forwarded-*`), `unpackWARs=false`, `autoDeploy=false`, and an explicit root `<Context docBase="ROOT">`.
+- `common/context.xml.default` — resource caching defaults for all webapps (`cacheMaxSize=100000`).
+- Packages: `telnet`, `tzdata`, `unzip`, `dumb-init`, `net-tools`, `iproute2`; stock `webapps.dist` removed.
+- Timezone: `Asia/Shanghai`.
+- `JDK_JAVA_OPTIONS` — a broad set of `--add-opens` / `--add-exports` for common library reflection needs.
+- Process model: `dumb-init` as PID 1 (`ENTRYPOINT ["/usr/bin/dumb-init", "--"]`, `CMD ["catalina.sh", "run"]`).
 
-podman manifest push \
-  --all registry.domain.name/reponame/tomcat:9-jdk17
+## Usage — Application Images Build on Top
 
-# Build JRE version
-podman manifest create \
-  registry.domain.name/reponame/tomcat:9-jre17
+Base images ship with an **empty `webapps` by design**: `server.xml` declares `docBase="ROOT"`, so a bare container is expected to fail startup. Downstream application images provide the webapp:
 
-podman build \
-  --platform linux/amd64,linux/arm64 \
-  --manifest registry.domain.name/reponame/tomcat:9-jre17 \
-  --build-arg BASE_IMAGE=tomcat:9-jre17 \
-  --file Dockerfile \
-  .
-
-podman manifest push \
-  --all registry.domain.name/reponame/tomcat:9-jre17
+```dockerfile
+FROM registry.cn-hangzhou.aliyuncs.com/dianplus/tomcat:11-jdk25
+COPY webapps/ROOT /usr/local/tomcat/webapps/ROOT
 ```
 
-### 1.2. for Docker
+## Repository Layout
 
-#### 1.2.0. Cross platform building
-
-Ensure qemu is installed on the system for cross-platform container image building.
-
-#### 1.2.1. Method 1 - Use buildx builder
-
-##### 1.2.1.1. Prepare buildx builder
-
-```toml
-# buildkitd.toml
-debug = true
-[registry."docker.io"]
-    mirrors = [
-        "mirror01.domain.name",
-        "mirror02.domain.name"
-    ]
+```
+9/ 10/ 11/                     # one directory per Tomcat major line
+  Dockerfile.renovate          # version anchor consumed by Renovate (FROM tomcat:X.Y.Z)
+  common/server.xml            # shared server configuration for the line
+  common/context.xml.default
+  <line>-jdkXX/<line>-jdkXX-temurin-ubuntu/Dockerfile   # variant Dockerfile (ARG BASE_IMAGE)
+.github/workflows/
+  continuous-image-build-pipeline.yml                    # build & publish pipeline
+renovate.json                  # Renovate managers, per-line version locks, automerge rule
+CHANGELOG.md
 ```
 
-```bash
-docker buildx rm container && \
-docker buildx create \
-  --name container \
-  --driver docker-container \
-  --config buildkitd.toml \
-  --driver-opt image=registry.domain.name/reponame/buildkit:v0.15.1 \
-  --use --bootstrap && \
-docker buildx ls
-```
+## Build & Release
 
-##### 1.2.1.2. Build and push
+CI (`.github/workflows/continuous-image-build-pipeline.yml`) builds all 8 variants for `linux/amd64,linux/arm64` and pushes to ACR on every push to `master`, on `v*.*.*` tags, and via manual dispatch. Buildx provenance attestations are disabled (`provenance: false`) because ACR rejects OCI attestation manifests.
+
+Manual cross-platform builds (maintainer reference):
 
 ```bash
-# Build JDK version (default)
+# Docker buildx
 docker buildx build \
-  --builder container \
   --platform linux/amd64,linux/arm64 \
   --push \
-  --build-arg BASE_IMAGE=tomcat:9-jdk17 \
-  --build-arg HTTP_PROXY=http://192.168.199.21:1087 \
-  --build-arg HTTPS_PROXY=http://192.168.199.21:1087 \
-  --build-arg NO_PROXY=192.168.*,10.*,172.*,your.domain.name \
-  --tag registry.domain.name/reponame/tomcat:9-jdk17 \
-  --file Dockerfile \
-  .
+  --build-arg BASE_IMAGE=tomcat:11-jdk25 \
+  --tag registry.cn-hangzhou.aliyuncs.com/dianplus/tomcat:11-jdk25 \
+  --file 11/11-jdk25/11-jdk25-temurin-ubuntu/Dockerfile \
+  11/
 
-# Build JRE version
-docker buildx build \
-  --builder container \
+# Podman
+podman manifest create registry.cn-hangzhou.aliyuncs.com/dianplus/tomcat:11-jdk25
+podman build \
   --platform linux/amd64,linux/arm64 \
-  --push \
-  --build-arg BASE_IMAGE=tomcat:9-jre17 \
-  --build-arg HTTP_PROXY=http://192.168.199.21:1087 \
-  --build-arg HTTPS_PROXY=http://192.168.199.21:1087 \
-  --build-arg NO_PROXY=192.168.*,10.*,172.*,your.domain.name \
-  --tag registry.domain.name/reponame/tomcat:9-jre17 \
-  --file Dockerfile \
-  .
+  --manifest registry.cn-hangzhou.aliyuncs.com/dianplus/tomcat:11-jdk25 \
+  --build-arg BASE_IMAGE=tomcat:11-jdk25 \
+  --file 11/11-jdk25/11-jdk25-temurin-ubuntu/Dockerfile \
+  11/
+podman manifest push --all registry.cn-hangzhou.aliyuncs.com/dianplus/tomcat:11-jdk25
 ```
 
-#### 1.2.2. Method 2 - The hard way
+## Version Maintenance (Renovate)
 
-##### 1.2.2.1. Build dedicated platform image
-
-```bash
-# AMD64 - JDK version
-docker build \
-  --tag registry.domain.name/reponame/tomcat:9-jdk17-amd64 \
-  --build-arg BASE_IMAGE=tomcat:9-jdk17 \
-  --file Dockerfile \
-  .
-docker push registry.domain.name/reponame/tomcat:9-jdk17-amd64
-
-# ARM64 - JDK version
-docker build \
-  --tag registry.domain.name/reponame/tomcat:9-jdk17-arm64 \
-  --build-arg BASE_IMAGE=tomcat:9-jdk17 \
-  --file Dockerfile \
-  .
-docker push registry.domain.name/reponame/tomcat:9-jdk17-arm64
-
-# AMD64 - JRE version
-docker build \
-  --tag registry.domain.name/reponame/tomcat:9-jre17-amd64 \
-  --build-arg BASE_IMAGE=tomcat:9-jre17 \
-  --file Dockerfile \
-  .
-docker push registry.domain.name/reponame/tomcat:9-jre17-amd64
-
-# ARM64 - JRE version
-docker build \
-  --tag registry.domain.name/reponame/tomcat:9-jre17-arm64 \
-  --build-arg BASE_IMAGE=tomcat:9-jre17 \
-  --file Dockerfile \
-  .
-docker push registry.domain.name/reponame/tomcat:9-jre17-arm64
-```
-
-##### 1.2.2.2. Create manifest list and add manifest
-
-```bash
-# JDK version
-docker manifest create \
-  registry.domain.name/reponame/tomcat:9-jdk17 \
-  --amend registry.domain.name/reponame/tomcat:9-jdk17-amd64 \
-  --amend registry.domain.name/reponame/tomcat:9-jdk17-arm64
-
-# JRE version
-docker manifest create \
-  registry.domain.name/reponame/tomcat:9-jre17 \
-  --amend registry.domain.name/reponame/tomcat:9-jre17-amd64 \
-  --amend registry.domain.name/reponame/tomcat:9-jre17-arm64
-```
-
-##### 1.2.2.3. Push manifest
-
-```bash
-# JDK version
-docker manifest push registry.domain.name/reponame/tomcat:9-jdk17
-
-# JRE version
-docker manifest push registry.domain.name/reponame/tomcat:9-jre17
-```
+- Each line's `Dockerfile.renovate` pins `FROM tomcat:X.Y.Z` as a **detection anchor only** — actual builds use floating aliases (`tomcat:11-jdk25`), so image content always tracks the latest upstream patch release on the next CI run.
+- `renovate.json` constrains each line to its major (`allowedVersions` `/^9\./`, `/^10\./`, `/^11\./`).
+- Upstream base-image tag bumps (docker/tomcat, patch/minor, in the three anchor files) are **automerged**: Renovate opens the PR and merges it itself (`platformAutomerge: false`, `merge-commit`, `ignoreTests: true` since PRs produce no status checks). Master-push CI rebuild is the downstream safety net.
+- GitHub Actions updates (`actions/*`) and any major bumps remain manual.
