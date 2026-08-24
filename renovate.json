@@ -73,6 +73,29 @@
         "11/Dockerfile.renovate"
       ],
       "allowedVersions": "/^11\\./"
+    },
+    {
+      "description": "Auto-merge upstream base image tag bumps",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "tomcat"
+      ],
+      "matchFileNames": [
+        "9/Dockerfile.renovate",
+        "10/Dockerfile.renovate",
+        "11/Dockerfile.renovate"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "merge-commit",
+      "platformAutomerge": false,
+      "ignoreTests": true
     }
   ],
   "ignorePaths": [
