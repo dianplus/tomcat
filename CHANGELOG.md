@@ -11,7 +11,7 @@ All notable changes to this repository are documented in this file.
   - `11/common/server.xml`
   - `11/common/context.xml.default`
   - `11/11-jdk25/11-jdk25-temurin-ubuntu/Dockerfile`
-- Added `tomcat11-jdk25` and `tomcat11-jre25` build variants to the CI matrix, publishing plain, `-temurin`, and `-temurin-ubuntu` tags.
+- Added a `tomcat11-jdk25` build variant to the CI matrix, publishing plain, `-temurin`, and `-temurin-ubuntu` tags.
 - Added a new `tomcat:10-jdk21` image profile under `10/`, including:
   - `10/Dockerfile.renovate`
   - `10/common/server.xml`
