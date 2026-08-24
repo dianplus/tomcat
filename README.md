@@ -88,3 +88,7 @@ podman manifest push --all registry.cn-hangzhou.aliyuncs.com/dianplus/tomcat:11-
 - `renovate.json` constrains each line to its major (`allowedVersions` `/^9\./`, `/^10\./`, `/^11\./`).
 - Upstream base-image tag bumps (docker/tomcat, patch/minor, in the three anchor files) are **automerged**: Renovate opens the PR and merges it itself (`platformAutomerge: false`, `merge-commit`, `ignoreTests: true` since PRs produce no status checks). Master-push CI rebuild is the downstream safety net.
 - GitHub Actions updates (`actions/*`) and any major bumps remain manual.
+
+## License
+
+[MIT](LICENSE)
