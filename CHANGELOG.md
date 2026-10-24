@@ -4,6 +4,14 @@ All notable changes to this repository are documented in this file.
 
 ## [Unreleased]
 
+### Security
+
+- Hardened image trust stores against the 2026 eMudhra CA compromise:
+  - Install `ca-certificates` explicitly so builds pick up the fixed package from Ubuntu USN-8944-1 (currently `20260816ubuntu0.26.04.1`), which removes `emSign ECC Root CA - G3` from the OS trust store.
+  - Remove the `emSign ECC Root CA - G3` entry from the JVM `cacerts` when the base image ships a JDK older than Temurin 17.0.21 / 21.0.13 / 25.0.5.
+  - Fail the build if either trust store still trusts the root.
+- Added a single-platform local build and a runtime trust-store check to the CI pipeline for every matrix variant.
+
 ### Added
 
 - Added a new `tomcat:11-jdk25` image profile under `11/`, including:

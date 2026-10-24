@@ -27,7 +27,8 @@ Layered on top of the official image:
 
 - `common/server.xml` — tuned NIO2 connector (`maxThreads=4096`, `maxConnections=8000`, `acceptCount=800`, HTTP compression, relaxed query/path chars, `RemoteIpValve` for `X-Forwarded-*`), `unpackWARs=false`, `autoDeploy=false`, and an explicit root `<Context docBase="ROOT">`.
 - `common/context.xml.default` — resource caching defaults for all webapps (`cacheMaxSize=100000`).
-- Packages: `telnet`, `tzdata`, `unzip`, `dumb-init`, `net-tools`, `iproute2`; stock `webapps.dist` removed.
+- Packages: `telnet`, `tzdata`, `unzip`, `dumb-init`, `net-tools`, `iproute2`, `ca-certificates`; stock `webapps.dist` removed.
+- CA trust hardening — upgrades `ca-certificates` and removes the compromised `emSign ECC Root CA - G3` from the OS and JVM trust stores; the build fails if either store still trusts it.
 - Timezone: `Asia/Shanghai`.
 - `JDK_JAVA_OPTIONS` — a broad set of `--add-opens` / `--add-exports` for common library reflection needs.
 - Process model: `dumb-init` as PID 1 (`ENTRYPOINT ["/usr/bin/dumb-init", "--"]`, `CMD ["catalina.sh", "run"]`).

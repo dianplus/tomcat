@@ -83,3 +83,23 @@ jobs:
           provenance: false
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ matrix.tags }}
+
+      - name: Build Local Image for Trust Store Verification
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          build-args: |
+            BASE_IMAGE=${{ matrix.base_image }}
+          platforms: linux/amd64
+          provenance: false
+          push: false
+          load: true
+          tags: ca-verify/${{ matrix.name }}:local
+
+      - name: Verify Compromised eMudhra Root Is Absent
+        run: |
+          docker run --rm --entrypoint sh ca-verify/${{ matrix.name }}:local -c '
+            test ! -e /etc/ssl/certs/emSign_ECC_Root_CA_-_G3.pem &&
+            ! keytool -list -cacerts -storepass changeit 2>/dev/null | grep -q "ecc_root_ca__g3"
+          '

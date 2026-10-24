@@ -10,8 +10,20 @@ COPY common/context.xml.default /usr/local/tomcat/conf/Catalina/localhost/
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    telnet tzdata unzip dumb-init net-tools iproute2 && \
+    telnet tzdata unzip dumb-init net-tools iproute2 ca-certificates && \
+    test ! -e /etc/ssl/certs/emSign_ECC_Root_CA_-_G3.pem && \
     rm -rf /var/lib/apt/lists/* /usr/local/tomcat/webapps.dist
+
+# eMudhra's emSign ECC Root CA - G3 signed compromised intermediates in 2026.
+# Drop it from the JVM trust store until the base image ships a fixed JDK.
+RUN keytool -list -cacerts -storepass changeit 2>/dev/null > /tmp/cacerts.list && \
+    if grep -q 'ecc_root_ca__g3' /tmp/cacerts.list; then \
+        keytool -delete -cacerts -storepass changeit \
+            -alias 'cn_emsign_ecc_root_ca__g3,o_emudhra_technologies_limited,ou_emsign_pki,c_in [jdk]'; \
+    fi && \
+    keytool -list -cacerts -storepass changeit 2>/dev/null > /tmp/cacerts.list && \
+    ! grep -q 'ecc_root_ca__g3' /tmp/cacerts.list && \
+    rm -f /tmp/cacerts.list
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
